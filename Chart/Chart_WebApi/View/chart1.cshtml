@@ -1,0 +1,45 @@
+﻿@model String
+@{
+	Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+
+</head>
+<body>
+	@* <h1>@Model</h1>
+	<h2> @Html.Raw(@Model)</h2> *@
+	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	<div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+
+	<script>
+
+		var chart = new CanvasJS.Chart("chartContainer", {
+			animationEnabled: true,
+			title: {
+				text: "Percentage Market Share of Treatments in Alternative Medicine"
+			},
+			data: [{
+				type: "doughnut",
+				startAngle: 60,
+				indexLabelFontSize: 16,
+				indexLabel: "{label} - {y}%",
+				toolTipContent: "<b>{label}:</b> {y}%",
+				dataPoints: [{ "label": "Herbal Medicines", "y": 41.0 }, { "label": "Aroma Therapy", "y": 22.0 }, { "label": "Homeopathy", "y": 9.0 }, { "label": "Acupuncture", "y": 7.0 }, { "label": "Massage Therapy", "y": 5.0 }, { "label": "Reflexology", "y": 6.0 }, { "label": "Osteopathy", "y": 5.0 }, { "label": "Chiropractic", "y": 5.0 }]
+			}]
+		});
+		chart.render();
+
+	</script>
+
+	<script type="text/javascript">
+		var data = [{ "label": "Herbal Medicines", "y": 41.0 }, { "label": "Aroma Therapy", "y": 22.0 }, { "label": "Homeopathy", "y": 9.0 }, { "label": "Acupuncture", "y": 7.0 }, { "label": "Massage Therapy", "y": 5.0 }, { "label": "Reflexology", "y": 6.0 }, { "label": "Osteopathy", "y": 5.0 }, { "label": "Chiropractic", "y": 5.0 }]
+		var ctx = document.getElementById("chartContainer1").getContext("2d");
+		var myNewChart = new Chart(ctx).Line(data);
+	</script>
+
+</body>
+</html>       
