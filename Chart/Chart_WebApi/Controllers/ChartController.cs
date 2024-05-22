@@ -38,19 +38,44 @@ namespace Chart_WebApi.Controllers
             ChartDataFactory chartdataFactory= new ChartDataFactory();
             // Generate chart data using factory
             var chartData = chartdataFactory.CreateRandomChartData();
-
-
-            
-           var htmlContent = $@"
+			var htmlContent = $@"
 <!DOCTYPE html>
 <html>
 <head>
     <title>Chart.js to PDF</title>
     <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            height: 100vh; 
+        }}
+        .container {{
+            max-width: 800px; 
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 70vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+        }}
+        canvas {{
+            width: 100%; 
+            max-width: 600px; 
+            height: auto;
+        }}
+    </style>
 </head>
 <body>
-    <canvas id='myChart' width='400' height='400'></canvas>
-    <script>
+    <div class='container'>
+        <canvas id='myChart'></canvas> 
+    </div>
+    <script> 
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {{
             type: '{chartData.ChartType}',
@@ -59,8 +84,7 @@ namespace Chart_WebApi.Controllers
                 datasets: [{{
                     label: '{chartData.DatasetLabel}',
                     data: {chartData.DatasetData},
-                    backgroundColor: '{chartData.DatasetBackgroundColor}',
-                    borderColor: '{chartData.DatasetBorderColor}',
+                    backgroundColor: {chartData.DatasetBackgroundColor},
                     borderWidth: {chartData.DatasetBorderWidth}
                 }}]
             }},
@@ -70,8 +94,10 @@ namespace Chart_WebApi.Controllers
 </body>
 </html>";
 
-            // Set HTML content in page
-            await page.SetContentAsync(htmlContent);
+
+
+			// Set HTML content in page
+			await page.SetContentAsync(htmlContent);
 
             // Wait for chart canvas to be rendered
             await page.WaitForSelectorAsync("#myChart");
