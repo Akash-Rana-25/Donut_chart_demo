@@ -37,7 +37,6 @@ namespace Chart_WebApi.Static_Data
 			"rgba(255, 193, 7, 1)"
 		};
 
-
 		public ChartData CreateRandomChartData()
 		{
 			var chartType = GetRandomChartType();
@@ -53,6 +52,7 @@ namespace Chart_WebApi.Static_Data
 				DatasetLabel = GetRandomDatasetLabel(),
 				DatasetData = JsonSerializer.Serialize(datasetData),
 				DatasetBackgroundColor = JsonSerializer.Serialize(datasetColors.BackgroundColors),
+				DatasetBorderColor = JsonSerializer.Serialize(datasetColors.BackgroundColors),
 				DatasetBorderWidth = _random.Next(1, 5),
 				ChartOptions = GetChartOptions(chartType)
 			};
@@ -83,7 +83,7 @@ namespace Chart_WebApi.Static_Data
 			var data = new int[count];
 			for (int i = 0; i < count; i++)
 			{
-				data[i] = _random.Next(50, 150);
+				data[i] = _random.Next(500, 1000);
 			}
 			return data;
 		}
@@ -100,8 +100,9 @@ namespace Chart_WebApi.Static_Data
 
 			for (int i = 0; i < numberOfLabels; i++)
 			{
-				backgroundColors.Add(_colors[_random.Next(_colors.Length)]);
-				borderColors.Add(_borderColors[_random.Next(_borderColors.Length)]);
+				var colorIndex = _random.Next(_colors.Length);
+				backgroundColors.Add(_colors[colorIndex]);
+				borderColors.Add(_borderColors[colorIndex]);
 			}
 
 			return (backgroundColors, borderColors);
@@ -115,41 +116,47 @@ namespace Chart_WebApi.Static_Data
 				case "line":
 					return @"{
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                    x: { display: true },
+                    y: { 
+                        display: true,
+                        beginAtZero: false 
+                    }
                 }
             }";
 				case "radar":
 					return @"{
-                scale: {
-                    ticks: {
-                        beginAtZero: true
-                    },
-                    reverse: false
+                scales: {
+                    r: {
+                        suggestedMin: 0, 
+                        suggestedMax: 1000 
+                    }
                 }
             }";
 				case "doughnut":
 				case "pie":
 					return @"{
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { enabled: true }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
             }";
 				case "polarArea":
 					return @"{
-                scale: {
-                    ticks: {
-                        beginAtZero: true
-                    },
-                    reverse: false
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { enabled: true }
                 },
-                scale: {
-                    ticks: {
-                        beginAtZero: true
-                    },
-                    reverse: false
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
                 }
             }";
 				default:

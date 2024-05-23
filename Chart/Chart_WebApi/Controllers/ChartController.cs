@@ -1,12 +1,8 @@
-﻿using Chart_WebApi.Model;
-using Chart_WebApi.Static_Data;
+﻿using Chart_WebApi.Static_Data;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
-using System.Reflection.Emit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Razor.Templating.Core;
 namespace Chart_WebApi.Controllers
 {
 
@@ -44,52 +40,56 @@ namespace Chart_WebApi.Controllers
 <head>
     <title>Chart.js to PDF</title>
     <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
-    <style>
-        body {{
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            height: 100vh; 
-        }}
-        .container {{
-            max-width: 800px; 
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            min-height: 70vh; 
-            display: flex;
-            align-items: center;
-            justify-content: center; 
-        }}
+   <style>
+        
         canvas {{
-            width: 100%; 
-            max-width: 600px; 
-            height: auto;
+            width: 100% !important;
+            height: auto !important;
+        }}
+        h1 {{
+            text-align: center;
+            font-size: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            
         }}
     </style>
 </head>
 <body>
     <div class='container'>
+  <h1>{chartData.ChartType}</h1>
         <canvas id='myChart'></canvas> 
     </div>
     <script> 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {{
-            type: '{chartData.ChartType}',
-            data: {{
-                labels: {chartData.Labels},
-                datasets: [{{
-                    label: '{chartData.DatasetLabel}',
-                    data: {chartData.DatasetData},
-                    backgroundColor: {chartData.DatasetBackgroundColor},
-                    borderWidth: {chartData.DatasetBorderWidth}
-                }}]
-            }},
-            options: {chartData.ChartOptions}
-        }});
+        try {{
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {{
+                type: '{chartData.ChartType}',
+                data: {{
+                    labels: {chartData.Labels},
+                    datasets: [{{
+                        label: '{chartData.DatasetLabel}',
+                        data: {chartData.DatasetData},
+                        backgroundColor: {chartData.DatasetBackgroundColor},
+                        borderColor: {chartData.DatasetBorderColor},
+                        borderWidth: {chartData.DatasetBorderWidth}
+                    }}]
+                }},
+                options: {{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {{
+                        yAxes: [{{
+                            ticks: {{
+                                beginAtZero: true
+                            }}
+                        }}]
+                    }}
+                }}
+            }});
+        }} catch (error) {{
+            console.error('Error creating chart:', error);
+        }}
     </script>
 </body>
 </html>";
